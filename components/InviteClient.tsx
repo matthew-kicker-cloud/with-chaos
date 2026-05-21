@@ -198,7 +198,12 @@ export function InviteClient({
           <Box className={styles.desktopGrid}>
             <Box>
               <Box className={styles.hero}>
-                <Typography className={styles.eyebrow}>Hello,</Typography>
+                <Typography
+                  className={styles.eyebrow}
+                  sx={{ mt: 3, mb: 3, fontSize: 36 }}
+                >
+                  Oh shit, it's another wedding.
+                </Typography>
                 <Typography className={styles.greetingName}>
                   {guest.display_name}.
                 </Typography>
@@ -229,6 +234,7 @@ export function InviteClient({
                   {guest.greeting ||
                     "Come ready for a joyful amount of chaos."}{" "}
                 </Typography>
+                <Typography>It's</Typography>
                 <Typography
                   sx={{
                     fontFamily: "var(--font-cond)",
