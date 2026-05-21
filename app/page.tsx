@@ -1,6 +1,5 @@
 import styles from "@/components/invite/InviteExperience.module.css";
-import { Box, Button, Typography } from "@mui/material";
-import Link from "next/link";
+import { Box, Typography } from "@mui/material";
 
 export default function HomePage() {
   return (
