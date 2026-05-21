@@ -199,7 +199,7 @@ export function InviteClient({
             <Box>
               <Box className={styles.hero}>
                 <Typography variant="inviteHeroKicker" sx={{ mt: 3, mb: 3 }}>
-                  Oh shit, it&apos;s another wedding.
+                  Oh blimey, it&apos;s another wedding.
                 </Typography>
                 <Typography variant="inviteGreetingName">
                   {guest.display_name}.
