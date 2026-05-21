@@ -198,13 +198,10 @@ export function InviteClient({
           <Box className={styles.desktopGrid}>
             <Box>
               <Box className={styles.hero}>
-                <Typography
-                  className={styles.eyebrow}
-                  sx={{ mt: 3, mb: 3, fontSize: 36 }}
-                >
+                <Typography variant="inviteHeroKicker" sx={{ mt: 3, mb: 3 }}>
                   Oh shit, it's another wedding.
                 </Typography>
-                <Typography className={styles.greetingName}>
+                <Typography variant="inviteGreetingName">
                   {guest.display_name}.
                 </Typography>
                 <Box
@@ -230,24 +227,14 @@ export function InviteClient({
                     <StarSticker />
                   </Box>
                 </Box>
-                <Typography className={styles.intro}>
+                <Typography variant="inviteIntro">
                   {guest.greeting ||
                     "Come ready for a joyful amount of chaos."}{" "}
                 </Typography>
-                <Typography>It's</Typography>
-                <Typography
-                  sx={{
-                    fontFamily: "var(--font-cond)",
-                    fontWeight: 900,
-                    letterSpacing: "0.05em",
-                    textTransform: "uppercase",
-                    mt: 0.5,
-                    fontSize: "20px",
-                  }}
-                >
-                  {eventTitle}
+                <Typography variant="inviteEventLabel" sx={{ mt: 1 }}>
+                  It's {eventTitle}
                 </Typography>
-                <Typography className={styles.intro} sx={{ mt: 2 }}>
+                <Typography variant="inviteIntro" sx={{ mt: 2 }}>
                   {mode === "save_the_date"
                     ? "This is your save-the-date. Full details are coming soon."
                     : "RSVP is open. Please let us know your plans below."}
@@ -255,7 +242,7 @@ export function InviteClient({
               </Box>
 
               <Box className={styles.dateBlock}>
-                <Typography className={styles.eyebrow}>The details</Typography>
+                <Typography variant="inviteEyebrow">The details</Typography>
                 <Box className={styles.dateLine}>
                   <span>{eventDate.split(" ")[1] ?? eventDate}</span>
                   <span className={styles.dateDot}>·</span>
@@ -273,14 +260,7 @@ export function InviteClient({
                   </span>
                   <span>{eventLocation}</span>
                 </Box>
-                <Typography
-                  sx={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: "14px",
-                    lineHeight: 1.55,
-                    mt: 1.4,
-                  }}
-                >
+                <Typography variant="inviteDetailsBody" sx={{ mt: 1.4 }}>
                   {eventDetailsText}
                 </Typography>
               </Box>
@@ -310,14 +290,12 @@ export function InviteClient({
             </Box>
 
             <Box className={styles.photoWall}>
-              <Typography className={styles.eyebrow}>A few things</Typography>
               <Typography className={styles.photoTitle} sx={{ mb: 5 }}>
-                us,{" "}
                 <span
                   className={styles.scribble}
                   style={{ fontStyle: "italic" }}
                 >
-                  at somepoint.
+                  Incase you have forgotten what we look like...
                 </span>
                 .
               </Typography>
