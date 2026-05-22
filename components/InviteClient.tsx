@@ -346,7 +346,7 @@ export function InviteClient({
                     })}
                   </Box>
                   <Typography className={styles.tapHint}>
-                    For old people: click the photo to see more.
+                    Top tip: click a photo.
                   </Typography>
                 </>
               ) : (
