@@ -61,6 +61,65 @@ function StarSticker({ size = 38 }: { size?: number }) {
   );
 }
 
+function GoogleBadge({ size = 18 }: { size?: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden
+      focusable="false"
+    >
+      <circle cx="12" cy="12" r="10" fill="white" />
+      <path
+        d="M12 4.2c2.2 0 4 .8 5.4 2.2l-2.2 2.2C14.4 7.8 13.3 7.4 12 7.4c-2.3 0-4.3 1.6-5 3.8l-2.7-2.1C5.6 6.2 8.6 4.2 12 4.2z"
+        fill="#EA4335"
+      />
+      <path
+        d="M19.8 12.2c0-.6-.1-1.1-.2-1.7H12v3.2h4.4c-.2 1-.8 1.9-1.6 2.5l2.6 2c1.5-1.4 2.4-3.5 2.4-6z"
+        fill="#4285F4"
+      />
+      <path
+        d="M7 11.2c.2-.7.6-1.4 1.1-2L5.4 7.1C4.5 8.5 4 10.2 4 12c0 1.7.4 3.3 1.3 4.7l2.7-2.1c-.6-.6-.9-1.4-1-2.4z"
+        fill="#FBBC05"
+      />
+      <path
+        d="M12 19.8c3.2 0 5.9-1 7.8-2.8l-2.6-2c-.7.5-1.9 1.5-5.2 1.5-2.3 0-4.3-1.6-5-3.8l-2.7 2.1c1.3 3 4.3 5 7.7 5z"
+        fill="#34A853"
+      />
+    </svg>
+  );
+}
+
+function CalendarFileBadge({ size = 18 }: { size?: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden
+      focusable="false"
+    >
+      <rect x="4" y="3.5" width="16" height="17" rx="2.6" fill="white" />
+      <rect x="4" y="3.5" width="16" height="5.2" rx="2.2" fill="#0B0A08" />
+      <rect x="7.2" y="12.2" width="4.2" height="4.2" rx="1" fill="#E2421F" />
+      <rect x="12.7" y="12.2" width="4.2" height="1.8" rx="0.9" fill="#0B0A08" />
+      <rect x="12.7" y="14.8" width="4.2" height="1.8" rx="0.9" fill="#0B0A08" />
+      <rect
+        x="4.7"
+        y="4.2"
+        width="14.6"
+        height="15.6"
+        rx="2"
+        stroke="#0B0A08"
+        strokeWidth="1.3"
+      />
+    </svg>
+  );
+}
+
 export function InviteClient({
   guest,
   mode,
@@ -169,7 +228,9 @@ export function InviteClient({
       if (!res.ok) {
         throw new Error(data.error ?? "Could not save decline response.");
       }
-      setContactMessage("You've been marked as declined. Thanks for letting us know.");
+      setContactMessage(
+        "You've been marked as declined. Thanks for letting us know.",
+      );
     } catch (error) {
       setContactError(
         error instanceof Error
@@ -289,26 +350,53 @@ export function InviteClient({
               </Box>
 
               <Box className={styles.actions}>
-                <Button
-                  className={styles.btnPrimary}
-                  disableElevation
-                  component="a"
-                  href={googleCalendarUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  sx={{ px: 3.2 }}
-                >
-                  Add calendar
-                </Button>
-                <Button
-                  className={styles.btnGhost}
-                  component="a"
-                  href={icsUrl}
-                  disableElevation
-                  sx={{ px: 3 }}
-                >
-                  Download .ics
-                </Button>
+                <Box>
+                  <Button
+                    className={styles.btnPrimary}
+                    disableElevation
+                    component="a"
+                    href={googleCalendarUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    sx={{ px: 2.8 }}
+                  >
+                    <Box
+                      sx={{ display: "inline-flex", alignItems: "center", gap: 1 }}
+                    >
+                      <GoogleBadge />
+                      <span>Add to Google Calendar</span>
+                    </Box>
+                  </Button>
+                </Box>
+                <Box sx={{ minWidth: "min(360px, 100%)" }}>
+                  <Button
+                    className={styles.btnGhost}
+                    component="a"
+                    href={icsUrl}
+                    disableElevation
+                    sx={{ px: 2.8 }}
+                  >
+                    <Box
+                      sx={{ display: "inline-flex", alignItems: "center", gap: 1 }}
+                    >
+                      <CalendarFileBadge />
+                      <span>Download for Apple / Outlook / Yahoo</span>
+                    </Box>
+                  </Button>
+                  <Typography
+                    sx={{
+                      mt: 0.8,
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "11px",
+                      letterSpacing: "0.01em",
+                      lineHeight: 1.35,
+                      maxWidth: "47ch",
+                    }}
+                  >
+                    Downloads a calendar file (.ics) you can open in Apple
+                    Calendar, Outlook, Yahoo, and similar calendar apps.
+                  </Typography>
+                </Box>
               </Box>
             </Box>
 
@@ -522,7 +610,7 @@ export function InviteClient({
               <div>LONDON · MMXXVI</div>
             </Box>
             <Typography className={styles.note}>
-              don&apos;t be the friend who flakes. xx
+              don&apos;t be boring.
             </Typography>
           </Box>
         </Box>

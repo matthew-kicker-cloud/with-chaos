@@ -6,9 +6,9 @@ export const eventConfig: EventConfig = {
   mode,
   title: "Amy & Matthew's Wedding Party",
   date: "2026-11-14",
-  roughLocation: "Somewhere. Likely London.",
-  fullLocation: "TBD.",
-  details: "We'll work that out at somepoint.",
+  roughLocation: "Somewhere in London.",
+  fullLocation: "Somewhere in London.",
+  details: "More details to be confirmed shortly...",
 };
 
 export const siteUrl = (
