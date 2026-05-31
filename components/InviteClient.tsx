@@ -296,9 +296,6 @@ export function InviteClient({
           <Box className={styles.desktopGrid}>
             <Box>
               <Box className={styles.hero}>
-                <Typography variant="inviteHeroKicker" sx={{ mt: 3, mb: 3 }}>
-                  It&apos;s time for a wedding.
-                </Typography>
                 <Typography variant="inviteGreetingName">
                   {guest.display_name}.
                 </Typography>
@@ -525,7 +522,7 @@ export function InviteClient({
                   {contactError ? (
                     <Alert severity="error">{contactError}</Alert>
                   ) : null}
-                  <Box>
+                  <Box className={styles.formButtons}>
                     <Button
                       className={styles.btnPrimary}
                       type="submit"
@@ -539,7 +536,7 @@ export function InviteClient({
                       className={styles.btnGhost}
                       type="button"
                       disableElevation
-                      sx={{ px: 3.2, ml: 1 }}
+                      sx={{ px: 3.2 }}
                       onClick={handleSaveTheDateDecline}
                       disabled={contactSaving || declineSaving}
                     >
