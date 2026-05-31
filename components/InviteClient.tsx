@@ -105,8 +105,22 @@ function CalendarFileBadge({ size = 18 }: { size?: number }) {
       <rect x="4" y="3.5" width="16" height="17" rx="2.6" fill="white" />
       <rect x="4" y="3.5" width="16" height="5.2" rx="2.2" fill="#0B0A08" />
       <rect x="7.2" y="12.2" width="4.2" height="4.2" rx="1" fill="#E2421F" />
-      <rect x="12.7" y="12.2" width="4.2" height="1.8" rx="0.9" fill="#0B0A08" />
-      <rect x="12.7" y="14.8" width="4.2" height="1.8" rx="0.9" fill="#0B0A08" />
+      <rect
+        x="12.7"
+        y="12.2"
+        width="4.2"
+        height="1.8"
+        rx="0.9"
+        fill="#0B0A08"
+      />
+      <rect
+        x="12.7"
+        y="14.8"
+        width="4.2"
+        height="1.8"
+        rx="0.9"
+        fill="#0B0A08"
+      />
       <rect
         x="4.7"
         y="4.2"
@@ -283,7 +297,7 @@ export function InviteClient({
             <Box>
               <Box className={styles.hero}>
                 <Typography variant="inviteHeroKicker" sx={{ mt: 3, mb: 3 }}>
-                  Oh blimey, it&apos;s another wedding.
+                  It&apos;s time for a wedding.
                 </Typography>
                 <Typography variant="inviteGreetingName">
                   {guest.display_name}.
@@ -312,8 +326,7 @@ export function InviteClient({
                   </Box>
                 </Box>
                 <Typography variant="inviteIntro">
-                  {guest.greeting ||
-                    "Come ready for a joyful amount of chaos."}{" "}
+                  {guest.greeting || ""}{" "}
                 </Typography>
                 <Typography variant="inviteEventLabel" sx={{ mt: 1 }}>
                   It&apos;s {eventTitle}
@@ -361,7 +374,11 @@ export function InviteClient({
                     sx={{ px: 2.8 }}
                   >
                     <Box
-                      sx={{ display: "inline-flex", alignItems: "center", gap: 1 }}
+                      sx={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 1,
+                      }}
                     >
                       <GoogleBadge />
                       <span>Add to Google Calendar</span>
@@ -377,10 +394,14 @@ export function InviteClient({
                     sx={{ px: 2.8 }}
                   >
                     <Box
-                      sx={{ display: "inline-flex", alignItems: "center", gap: 1 }}
+                      sx={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 1,
+                      }}
                     >
                       <CalendarFileBadge />
-                      <span>Download for Apple / Outlook / Yahoo</span>
+                      <span>Add to Apple / Outlook</span>
                     </Box>
                   </Button>
                   <Typography
@@ -480,8 +501,13 @@ export function InviteClient({
                 <Typography className={styles.formTitle}>
                   Save the date
                 </Typography>
-                <Typography className={styles.formIntro}>
-                  Optional details help us send updates.
+                {guest.max_party_size === 1 ? (
+                  <Typography className={styles.formIntro}>
+                    Plus ones encouraged!
+                  </Typography>
+                ) : null}
+                <Typography className={styles.formIntro} sx={{ mt: 1 }}>
+                  Drop your email for updates.
                 </Typography>
                 <Stack spacing={1.4} gap={1} mt={2}>
                   <TextField
@@ -519,7 +545,7 @@ export function InviteClient({
                     >
                       {declineSaving
                         ? "Saving..."
-                        : "Sorry - I've got more important plans"}
+                        : "Sorry - I'm washing my hair."}
                     </Button>
                   </Box>
                 </Stack>
