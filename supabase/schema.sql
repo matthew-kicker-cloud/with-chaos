@@ -7,6 +7,7 @@ create table if not exists public.guests (
   greeting text,
   max_party_size int not null default 1 check (max_party_size >= 1),
   photo_filenames text[] not null default '{}',
+  invite_sent boolean not null default false,
   email text,
   phone text,
   mailing_address text,
@@ -24,6 +25,9 @@ create table if not exists public.guests (
 
 alter table public.guests
 add column if not exists photo_filenames text[] not null default '{}';
+
+alter table public.guests
+add column if not exists invite_sent boolean not null default false;
 
 alter table public.guests
 add column if not exists declined_at_save_the_date boolean not null default false;

@@ -6,8 +6,10 @@ import {
   Alert,
   Box,
   Button,
+  Checkbox,
   Container,
   Divider,
+  FormControlLabel,
   Paper,
   Stack,
   Table,
@@ -31,6 +33,7 @@ type GuestFormValues = {
   greeting: string;
   max_party_size: number;
   photo_filenames_text: string;
+  invite_sent: boolean;
 };
 
 const emptyGuestForm: GuestFormValues = {
@@ -38,7 +41,8 @@ const emptyGuestForm: GuestFormValues = {
   display_name: "",
   greeting: "",
   max_party_size: 1,
-  photo_filenames_text: ""
+  photo_filenames_text: "",
+  invite_sent: false
 };
 
 function stringifyPhotoList(photoFilenames: string[]): string {
@@ -115,7 +119,8 @@ export function AdminDashboard({ initialGuests, siteUrl }: AdminDashboardProps) 
       display_name: guest.display_name,
       greeting: guest.greeting ?? "",
       max_party_size: guest.max_party_size,
-      photo_filenames_text: stringifyPhotoList(guest.photo_filenames)
+      photo_filenames_text: stringifyPhotoList(guest.photo_filenames),
+      invite_sent: guest.invite_sent
     });
   };
 
@@ -232,6 +237,15 @@ export function AdminDashboard({ initialGuests, siteUrl }: AdminDashboardProps) 
                 onChange={(e) => setCreateForm((v) => ({ ...v, photo_filenames_text: e.target.value }))}
                 placeholder="mum-dad-1.jpg, mum-dad-2.jpg"
               />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={createForm.invite_sent}
+                    onChange={(e) => setCreateForm((v) => ({ ...v, invite_sent: e.target.checked }))}
+                  />
+                }
+                label="Invite sent"
+              />
               <Box>
                 <Button type="submit" variant="contained">
                   Add
@@ -282,6 +296,15 @@ export function AdminDashboard({ initialGuests, siteUrl }: AdminDashboardProps) 
                   value={editForm.photo_filenames_text}
                   onChange={(e) => setEditForm((v) => ({ ...v, photo_filenames_text: e.target.value }))}
                 />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={editForm.invite_sent}
+                      onChange={(e) => setEditForm((v) => ({ ...v, invite_sent: e.target.checked }))}
+                    />
+                  }
+                  label="Invite sent"
+                />
                 <Stack direction="row" spacing={1}>
                   <Button type="submit" variant="contained">
                     Save
@@ -302,6 +325,7 @@ export function AdminDashboard({ initialGuests, siteUrl }: AdminDashboardProps) 
                 <TableCell>Guest</TableCell>
                 <TableCell>Slug</TableCell>
                 <TableCell>Photos</TableCell>
+                <TableCell>Invite sent</TableCell>
                 <TableCell>RSVP</TableCell>
                 <TableCell>Attending</TableCell>
                 <TableCell>Contact</TableCell>
@@ -319,6 +343,7 @@ export function AdminDashboard({ initialGuests, siteUrl }: AdminDashboardProps) 
                   </TableCell>
                   <TableCell>{guest.slug}</TableCell>
                   <TableCell>{guest.photo_filenames.length}</TableCell>
+                  <TableCell>{guest.invite_sent ? "Yes" : "No"}</TableCell>
                   <TableCell>{guest.rsvp_status}</TableCell>
                   <TableCell>{guest.attending_count}</TableCell>
                   <TableCell>

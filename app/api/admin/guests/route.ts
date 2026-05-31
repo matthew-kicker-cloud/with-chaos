@@ -9,6 +9,7 @@ type CreateGuestBody = {
   greeting?: string;
   max_party_size?: number;
   photo_filenames?: unknown;
+  invite_sent?: boolean;
 };
 
 function normalizeSlug(input: string): string {
@@ -28,6 +29,7 @@ export async function POST(request: Request) {
     const greeting = body.greeting?.trim() ?? null;
     const maxPartySize = Number(body.max_party_size ?? 1);
     const photoFilenames = sanitizePhotoFilenames(body.photo_filenames);
+    const inviteSent = body.invite_sent === true;
 
     if (!slug || !displayName) {
       return NextResponse.json({ error: "Slug and display name are required." }, { status: 400 });
@@ -45,7 +47,8 @@ export async function POST(request: Request) {
         display_name: displayName,
         greeting,
         max_party_size: maxPartySize,
-        photo_filenames: photoFilenames
+        photo_filenames: photoFilenames,
+        invite_sent: inviteSent
       })
       .select("*")
       .single();

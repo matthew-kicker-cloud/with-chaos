@@ -7,6 +7,7 @@ export type Guest = {
   greeting: string | null;
   max_party_size: number;
   photo_filenames: string[];
+  invite_sent: boolean;
   email: string | null;
   phone: string | null;
   mailing_address: string | null;
