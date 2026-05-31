@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "seed": "node scripts/supabase-seed.mjs",
+    "db:migrate": "node scripts/supabase-migrate.mjs",
     "db:setup": "node scripts/supabase-seed.mjs"
   },
   "dependencies": {

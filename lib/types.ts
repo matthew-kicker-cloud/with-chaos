@@ -16,6 +16,7 @@ export type Guest = {
   song_request: string | null;
   message: string | null;
   save_the_date_seen_at: string | null;
+  declined_at_save_the_date: boolean;
   contact_details_updated_at: string | null;
   created_at: string;
   updated_at: string;
@@ -42,6 +43,9 @@ export type RsvpPayload = {
 export type ContactDetailsPayload = {
   slug: string;
   email: string;
-  phone: string;
-  mailingAddress: string;
+};
+
+export type SaveTheDateDeclinePayload = {
+  slug: string;
+  email: string;
 };

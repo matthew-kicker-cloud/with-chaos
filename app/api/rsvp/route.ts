@@ -36,6 +36,8 @@ export async function POST(request: Request) {
       .update({
         rsvp_status: body.attending === "yes" ? "attending" : "not_attending",
         attending_count: attendingCount,
+        declined_at_save_the_date:
+          body.attending === "yes" ? false : guest.declined_at_save_the_date,
         dietary_notes: (body.dietaryNotes ?? "").trim() || null,
         song_request: (body.songRequest ?? "").trim() || null,
         message: (body.message ?? "").trim() || null

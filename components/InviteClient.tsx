@@ -24,14 +24,10 @@ type InviteClientProps = {
   icsUrl: string;
 };
 
-const fauxCaptions = [
-  "3am chips. terrible idea, perfect memory.",
-  "that pub quiz where confidence carried us.",
-  "dance floor chaos and no regrets.",
-  "long drive playlist, one song on loop.",
-  "sunday kitchen scenes, mild panic, big laughs.",
-  "proof we can look civilised for at least 4 minutes.",
-];
+function getPhotoCaptionFromUrl(url: string) {
+  const filename = decodeURIComponent(url.split("/").pop() ?? url);
+  return filename.replace(/\.[^/.]+$/, "");
+}
 
 const inviteFieldSx = {
   "& .MuiOutlinedInput-root": {
@@ -77,10 +73,9 @@ export function InviteClient({
 }: InviteClientProps) {
   const [contact, setContact] = useState({
     email: guest.email ?? "",
-    phone: guest.phone ?? "",
-    mailingAddress: guest.mailing_address ?? "",
   });
   const [contactSaving, setContactSaving] = useState(false);
+  const [declineSaving, setDeclineSaving] = useState(false);
   const [contactMessage, setContactMessage] = useState<string | null>(null);
   const [contactError, setContactError] = useState<string | null>(null);
 
@@ -138,8 +133,6 @@ export function InviteClient({
         body: JSON.stringify({
           slug: guest.slug,
           email: contact.email.trim(),
-          phone: contact.phone.trim(),
-          mailingAddress: contact.mailingAddress.trim(),
         }),
       });
       const data = await res.json();
@@ -155,6 +148,36 @@ export function InviteClient({
       );
     } finally {
       setContactSaving(false);
+    }
+  };
+
+  const handleSaveTheDateDecline = async () => {
+    setDeclineSaving(true);
+    setContactError(null);
+    setContactMessage(null);
+
+    try {
+      const res = await fetch("/api/save-the-date-decline", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          slug: guest.slug,
+          email: contact.email.trim(),
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error ?? "Could not save decline response.");
+      }
+      setContactMessage("You've been marked as declined. Thanks for letting us know.");
+    } catch (error) {
+      setContactError(
+        error instanceof Error
+          ? error.message
+          : "Could not save decline response.",
+      );
+    } finally {
+      setDeclineSaving(false);
     }
   };
 
@@ -339,7 +362,7 @@ export function InviteClient({
                             className={styles.photoTag}
                           >{`NO. ${String(idx + 1).padStart(2, "0")}`}</Box>
                           <Typography className={styles.cap}>
-                            {fauxCaptions[idx % fauxCaptions.length]}
+                            {getPhotoCaptionFromUrl(url)}
                           </Typography>
                         </Box>
                       );
@@ -370,8 +393,7 @@ export function InviteClient({
                   Save the date
                 </Typography>
                 <Typography className={styles.formIntro}>
-                  Optional details help us send updates and anything that needs
-                  posting.
+                  Optional details help us send updates.
                 </Typography>
                 <Stack spacing={1.4} gap={1} mt={2}>
                   <TextField
@@ -381,27 +403,6 @@ export function InviteClient({
                     value={contact.email}
                     onChange={(e) =>
                       setContact((v) => ({ ...v, email: e.target.value }))
-                    }
-                  />
-                  <TextField
-                    label="Phone"
-                    sx={inviteFieldSx}
-                    value={contact.phone}
-                    onChange={(e) =>
-                      setContact((v) => ({ ...v, phone: e.target.value }))
-                    }
-                  />
-                  <TextField
-                    label="Mailing address"
-                    multiline
-                    minRows={2}
-                    sx={inviteFieldSx}
-                    value={contact.mailingAddress}
-                    onChange={(e) =>
-                      setContact((v) => ({
-                        ...v,
-                        mailingAddress: e.target.value,
-                      }))
                     }
                   />
                   {contactMessage ? (
@@ -416,9 +417,21 @@ export function InviteClient({
                       type="submit"
                       disableElevation
                       sx={{ px: 3.4 }}
-                      disabled={contactSaving}
+                      disabled={contactSaving || declineSaving}
                     >
                       {contactSaving ? "Saving..." : "Save details"}
+                    </Button>
+                    <Button
+                      className={styles.btnGhost}
+                      type="button"
+                      disableElevation
+                      sx={{ px: 3.2, ml: 1 }}
+                      onClick={handleSaveTheDateDecline}
+                      disabled={contactSaving || declineSaving}
+                    >
+                      {declineSaving
+                        ? "Saving..."
+                        : "Sorry - I've got more important plans"}
                     </Button>
                   </Box>
                 </Stack>

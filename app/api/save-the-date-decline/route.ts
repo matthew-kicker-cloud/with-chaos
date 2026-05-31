@@ -1,11 +1,11 @@
 import { getGuestBySlug } from "@/lib/guests";
 import { createServerSupabaseClient } from "@/lib/supabase";
-import { ContactDetailsPayload } from "@/lib/types";
+import { SaveTheDateDeclinePayload } from "@/lib/types";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as Partial<ContactDetailsPayload>;
+    const body = (await request.json()) as Partial<SaveTheDateDeclinePayload>;
     if (!body.slug) {
       return NextResponse.json({ error: "Missing slug." }, { status: 400 });
     }
@@ -19,6 +19,9 @@ export async function POST(request: Request) {
     const { data, error } = await supabase
       .from("guests")
       .update({
+        rsvp_status: "not_attending",
+        attending_count: 0,
+        declined_at_save_the_date: true,
         email: (body.email ?? "").trim() || null,
         contact_details_updated_at: new Date().toISOString()
       })
@@ -33,6 +36,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true, guest: data });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: "Could not save contact details." }, { status: 500 });
+    return NextResponse.json(
+      { error: "Could not save save-the-date decline." },
+      { status: 500 }
+    );
   }
 }

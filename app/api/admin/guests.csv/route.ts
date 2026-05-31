@@ -2,7 +2,7 @@ import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { getAllGuests } from "@/lib/guests";
 import { NextResponse } from "next/server";
 
-function escapeCsv(value: string | number | null): string {
+function escapeCsv(value: string | number | boolean | null): string {
   const raw = value === null ? "" : String(value);
   const escaped = raw.replace(/"/g, "\"\"");
   return `"${escaped}"`;
@@ -31,6 +31,7 @@ export async function GET() {
     "song_request",
     "message",
     "save_the_date_seen_at",
+    "declined_at_save_the_date",
     "contact_details_updated_at",
     "created_at",
     "updated_at"
@@ -53,6 +54,7 @@ export async function GET() {
       guest.song_request,
       guest.message,
       guest.save_the_date_seen_at,
+      guest.declined_at_save_the_date,
       guest.contact_details_updated_at,
       guest.created_at,
       guest.updated_at
