@@ -330,7 +330,7 @@ export function InviteClient({
                 </Typography>
                 <Typography variant="inviteIntro" sx={{ mt: 2 }}>
                   {mode === "save_the_date"
-                    ? "This is your save-the-date. Full details are coming soon."
+                    ? "This is your (updated) save-the-date. More details will keep coming chaotically through."
                     : "RSVP is open. Please let us know your plans below."}
                 </Typography>
               </Box>
@@ -338,6 +338,14 @@ export function InviteClient({
               <Box className={styles.dateBlock}>
                 <Typography variant="inviteEyebrow">The details</Typography>
                 <Box className={styles.dateLine}>
+                  <span
+                    style={{
+                      textDecoration: "line-through",
+                      fontWeight: "100 !important",
+                    }}
+                  >
+                    14
+                  </span>
                   <span>{eventDate.split(" ")[1] ?? eventDate}</span>
                   <span className={styles.dateDot}>·</span>
                   <span style={{ fontStyle: "italic" }}>
