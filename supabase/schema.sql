@@ -16,6 +16,7 @@ create table if not exists public.guests (
   dietary_notes text,
   song_request text,
   message text,
+  boozy_level int not null default 5 check (boozy_level >= 0 and boozy_level <= 10),
   save_the_date_seen_at timestamptz,
   declined_at_save_the_date boolean not null default false,
   contact_details_updated_at timestamptz,
@@ -31,6 +32,9 @@ add column if not exists invite_sent boolean not null default false;
 
 alter table public.guests
 add column if not exists declined_at_save_the_date boolean not null default false;
+
+alter table public.guests
+add column if not exists boozy_level int not null default 5 check (boozy_level >= 0 and boozy_level <= 10);
 
 create or replace function public.set_updated_at()
 returns trigger

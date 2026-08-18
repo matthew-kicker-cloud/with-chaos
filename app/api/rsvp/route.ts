@@ -30,6 +30,11 @@ export async function POST(request: Request) {
       );
     }
 
+    const boozyLevel = Number(body.boozyLevel ?? guest.boozy_level ?? 5);
+    if (!Number.isInteger(boozyLevel) || boozyLevel < 0 || boozyLevel > 10) {
+      return NextResponse.json({ error: "Boozy level must be between 0 and 10." }, { status: 400 });
+    }
+
     const supabase = createServerSupabaseClient();
     const { data, error } = await supabase
       .from("guests")
@@ -39,7 +44,7 @@ export async function POST(request: Request) {
         declined_at_save_the_date:
           body.attending === "yes" ? false : guest.declined_at_save_the_date,
         dietary_notes: (body.dietaryNotes ?? "").trim() || null,
-        song_request: (body.songRequest ?? "").trim() || null,
+        boozy_level: boozyLevel,
         message: (body.message ?? "").trim() || null
       })
       .eq("id", guest.id)

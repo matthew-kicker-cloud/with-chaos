@@ -15,6 +15,62 @@
   background: var(--paper);
 }
 
+.sadFaceStreak {
+  position: fixed;
+  top: 38%;
+  left: -8%;
+  z-index: 5;
+  pointer-events: none;
+  font-family: var(--font-mono), monospace;
+  font-size: 34px;
+  font-weight: 700;
+  color: var(--ink);
+  animation: sadFaceTravel 2.8s ease-in-out forwards;
+}
+
+@keyframes sadFaceTravel {
+  0% {
+    left: -8%;
+    opacity: 0;
+    transform: translateY(-50%);
+  }
+  12% {
+    opacity: 0.85;
+  }
+  88% {
+    opacity: 0.85;
+  }
+  100% {
+    left: 108%;
+    opacity: 0;
+    transform: translateY(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sadFaceStreak {
+    left: 50%;
+    top: 38%;
+    transform: translate(-50%, -50%);
+    animation: sadFaceFade 0.7s ease-in-out forwards;
+  }
+
+  @keyframes sadFaceFade {
+    0% {
+      opacity: 0;
+    }
+    35% {
+      opacity: 0.85;
+    }
+    65% {
+      opacity: 0.85;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+}
+
 .inviteRoot::before {
   content: "";
   position: absolute;
@@ -158,6 +214,11 @@
   font-size: 28px;
 }
 
+.detailsCard {
+  margin-top: 14px;
+  padding: 18px 20px;
+}
+
 .metaRow {
   display: flex;
   justify-content: space-between;
@@ -172,11 +233,69 @@
   flex-wrap: wrap;
 }
 
-.actions {
-  margin-top: 22px;
+.rsvpJump {
+  display: inline-block;
+  margin-top: 8px;
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--soft);
+  text-decoration: underline;
+  text-decoration-color: rgba(11, 10, 8, 0.3);
+  text-underline-offset: 2px;
+  transition:
+    text-decoration-color 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.rsvpJump:hover {
+  text-decoration-color: var(--ink);
+  opacity: 0.75;
+}
+
+.mapLink {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: rgba(11, 10, 8, 0.35);
+  text-underline-offset: 2px;
+  transition:
+    text-decoration-color 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.mapLink:hover {
+  text-decoration-color: var(--ink);
+  opacity: 0.7;
+}
+
+.calendarRow {
+  margin-top: 14px;
   display: flex;
-  gap: 10px;
+  align-items: center;
+  gap: 8px;
   flex-wrap: wrap;
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.03em;
+  color: var(--soft);
+}
+
+.calendarLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(11, 10, 8, 0.35);
+}
+
+.calendarLink:hover {
+  border-bottom-color: var(--ink);
+}
+
+.calendarSep {
+  color: var(--hair);
 }
 
 .btnPrimary,
@@ -184,7 +303,7 @@
   border-radius: 999px !important;
   text-transform: uppercase !important;
   letter-spacing: 0.04em !important;
-  min-height: 56px !important;
+  min-height: 44px !important;
   font-family: var(--font-cond), sans-serif !important;
   font-weight: 900 !important;
 }
@@ -192,7 +311,7 @@
 .btnPrimary {
   background: var(--ink) !important;
   color: var(--paper) !important;
-  font-size: 23px !important;
+  font-size: 17px !important;
   border: 0 !important;
 }
 
@@ -200,7 +319,7 @@
   background: transparent !important;
   color: var(--ink) !important;
   border: 1.5px solid var(--ink) !important;
-  font-size: 21px !important;
+  font-size: 16px !important;
 }
 
 .photoWall {
@@ -296,12 +415,167 @@
   color: var(--soft);
 }
 
+.mosaicTrigger {
+  display: block;
+  margin: 10px auto 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--soft);
+  text-decoration: underline;
+  text-decoration-color: rgba(11, 10, 8, 0.3);
+  text-underline-offset: 2px;
+  transition:
+    text-decoration-color 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.mosaicTrigger:hover {
+  text-decoration-color: var(--ink);
+  opacity: 0.75;
+}
+
+.mosaicRoot {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+}
+
+.mosaicBackdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: rgba(241, 232, 214, 0.55);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.mosaicOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow-y: auto;
+  padding: 64px 16px 48px;
+}
+
+.mosaicClose {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 201;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1.5px solid var(--ink);
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.mosaicClose:hover {
+  opacity: 0.75;
+}
+
+.mosaicGrid {
+  columns: 2;
+  column-gap: 10px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.mosaicItem {
+  break-inside: avoid;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: zoom-in;
+}
+
+.mosaicFootnote {
+  max-width: 1100px;
+  margin: 24px auto 0;
+  padding: 0 4px;
+  font-family: var(--font-mono), monospace;
+  font-size: 8px;
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--soft);
+}
+
+.mosaicImg {
+  display: block;
+  width: 100%;
+}
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 210;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  background: rgba(11, 10, 8, 0.88);
+  cursor: zoom-out;
+}
+
+.lightboxContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.lightboxImg {
+  display: block;
+  max-width: 100%;
+  max-height: 78vh;
+  width: auto;
+  height: auto;
+  border-radius: 6px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.lightboxCaption {
+  font-family: var(--font-hand), cursive;
+  font-size: 20px;
+  color: var(--paper);
+  text-align: center;
+  max-width: 90vw;
+}
+
+@media (min-width: 640px) {
+  .mosaicGrid {
+    columns: 3;
+  }
+}
+
+@media (min-width: 1000px) {
+  .mosaicGrid {
+    columns: 4;
+  }
+}
+
 .formCard {
   margin-top: 20px;
   border: 1.5px solid var(--ink);
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.35);
   padding: 18px;
+  scroll-margin-top: 24px;
 }
 
 .formTitle {
@@ -418,6 +692,10 @@
   .sheet {
     max-width: 1120px;
     padding: 44px 56px 52px;
+  }
+
+  .rsvpJump {
+    display: none;
   }
 
   .desktopGrid {

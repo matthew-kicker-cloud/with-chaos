@@ -34,7 +34,12 @@ export default async function InvitePage({ params }: InvitePageProps) {
       eventTitle={eventConfig.title}
       eventDate={eventDate}
       eventLocation={eventConfig.mode === "save_the_date" ? eventConfig.roughLocation : eventConfig.fullLocation}
+      eventMapsUrl={eventConfig.mapsUrl}
       eventDetailsText={eventConfig.mode === "save_the_date" ? "Full details coming soon." : eventConfig.details}
+      eventDressCode={eventConfig.dressCode}
+      eventStartTime={eventConfig.startTime}
+      eventEndTime={eventConfig.endTime}
+      eventRsvpDeadline={eventConfig.rsvpDeadline}
       googleCalendarUrl={googleCalendarUrl}
       icsUrl={icsUrl}
     />

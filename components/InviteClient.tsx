@@ -7,11 +7,13 @@ import {
   Box,
   Button,
   MenuItem,
+  Modal,
+  Slider,
   Stack,
   TextField,
   Typography,
 } from "@mui/material";
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 
 type InviteClientProps = {
   guest: Guest;
@@ -19,7 +21,12 @@ type InviteClientProps = {
   eventTitle: string;
   eventDate: string;
   eventLocation: string;
+  eventMapsUrl: string;
   eventDetailsText: string;
+  eventDressCode: string;
+  eventStartTime: string;
+  eventEndTime: string;
+  eventRsvpDeadline: string;
   googleCalendarUrl: string;
   icsUrl: string;
 };
@@ -134,13 +141,30 @@ function CalendarFileBadge({ size = 18 }: { size?: number }) {
   );
 }
 
+function SadFaceStreak({ onDone }: { onDone: () => void }) {
+  return (
+    <Box
+      className={styles.sadFaceStreak}
+      aria-hidden
+      onAnimationEnd={onDone}
+    >
+      :(
+    </Box>
+  );
+}
+
 export function InviteClient({
   guest,
   mode,
   eventTitle,
   eventDate,
   eventLocation,
+  eventMapsUrl,
   eventDetailsText,
+  eventDressCode,
+  eventStartTime,
+  eventEndTime,
+  eventRsvpDeadline,
   googleCalendarUrl,
   icsUrl,
 }: InviteClientProps) {
@@ -159,11 +183,21 @@ export function InviteClient({
         ? "no"
         : "yes";
   const [attending, setAttending] = useState<"yes" | "no">(initialAttending);
+  const prevAttendingRef = useRef(attending);
+  const [sadFaceKey, setSadFaceKey] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (attending === "no" && prevAttendingRef.current !== "no") {
+      setSadFaceKey((key) => (key ?? 0) + 1);
+    }
+    prevAttendingRef.current = attending;
+  }, [attending]);
+
   const [attendingCount, setAttendingCount] = useState(
     Math.min(Math.max(guest.attending_count || 1, 1), guest.max_party_size),
   );
   const [dietaryNotes, setDietaryNotes] = useState(guest.dietary_notes ?? "");
-  const [songRequest, setSongRequest] = useState(guest.song_request ?? "");
+  const [boozyLevel, setBoozyLevel] = useState(guest.boozy_level ?? 5);
   const [message, setMessage] = useState(guest.message ?? "");
   const [rsvpSaving, setRsvpSaving] = useState(false);
   const [rsvpMessage, setRsvpMessage] = useState<string | null>(null);
@@ -171,6 +205,8 @@ export function InviteClient({
 
   const [activePhotoIndex, setActivePhotoIndex] = useState(0);
   const [failedPhotoUrls, setFailedPhotoUrls] = useState<string[]>([]);
+  const [mosaicOpen, setMosaicOpen] = useState(false);
+  const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
 
   const countChoices = useMemo(() => {
     return Array.from({ length: guest.max_party_size }, (_, idx) => idx + 1);
@@ -271,7 +307,7 @@ export function InviteClient({
           attending,
           attendingCount: attending === "yes" ? attendingCount : 0,
           dietaryNotes: dietaryNotes.trim(),
-          songRequest: songRequest.trim(),
+          boozyLevel,
           message: message.trim(),
         }),
       });
@@ -291,6 +327,12 @@ export function InviteClient({
 
   return (
     <Box className={styles.inviteRoot}>
+      {sadFaceKey !== null ? (
+        <SadFaceStreak
+          key={sadFaceKey}
+          onDone={() => setSadFaceKey(null)}
+        />
+      ) : null}
       <Box className={styles.sheet}>
         <Box className={styles.inner}>
           <Box className={styles.desktopGrid}>
@@ -331,21 +373,13 @@ export function InviteClient({
                 <Typography variant="inviteIntro" sx={{ mt: 2 }}>
                   {mode === "save_the_date"
                     ? "This is your (updated) save-the-date. More details will keep coming chaotically through."
-                    : "RSVP is open. Please let us know your plans below."}
+                    : `Please RSVP by ${eventRsvpDeadline}.`}
                 </Typography>
               </Box>
 
               <Box className={styles.dateBlock}>
                 <Typography variant="inviteEyebrow">The details</Typography>
                 <Box className={styles.dateLine}>
-                  <span
-                    style={{
-                      textDecoration: "line-through",
-                      fontWeight: "100 !important",
-                    }}
-                  >
-                    14
-                  </span>
                   <span>{eventDate.split(" ")[1] ?? eventDate}</span>
                   <span className={styles.dateDot}>·</span>
                   <span style={{ fontStyle: "italic" }}>
@@ -360,68 +394,59 @@ export function InviteClient({
                       ? "Save the date"
                       : "RSVP open now"}
                   </span>
-                  <span>{eventLocation}</span>
+                  <span>
+                    {eventStartTime} &ndash; {eventEndTime}
+                  </span>
+                  <span>
+                    <a
+                      href={eventMapsUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className={styles.mapLink}
+                    >
+                      📍 {eventLocation} ↗
+                    </a>
+                  </span>
                 </Box>
-                <Typography variant="inviteDetailsBody" sx={{ mt: 1.4 }}>
-                  {eventDetailsText}
-                </Typography>
-              </Box>
-
-              <Box className={styles.actions}>
-                <Box>
-                  <Button
-                    className={styles.btnPrimary}
-                    disableElevation
-                    component="a"
+                {mode === "rsvp_open" ? (
+                  <a href="#rsvp-form" className={styles.rsvpJump}>
+                    RSVP ↓
+                  </a>
+                ) : null}
+                <Box className={styles.detailsCard}>
+                  <Typography
+                    variant="inviteDetailsBody"
+                    sx={{ whiteSpace: "pre-line" }}
+                  >
+                    {eventDetailsText}
+                  </Typography>
+                </Box>
+                {mode === "rsvp_open" ? (
+                  <>
+                    <Typography variant="inviteEyebrow" sx={{ mt: 2 }}>
+                      Dress Code
+                    </Typography>
+                    <Typography variant="inviteDetailsBody" sx={{ mt: 1.4 }}>
+                      {eventDressCode}
+                    </Typography>
+                  </>
+                ) : null}
+                <Box className={styles.calendarRow}>
+                  <span>Add to calendar:</span>
+                  <a
                     href={googleCalendarUrl}
                     target="_blank"
                     rel="noreferrer"
-                    sx={{ px: 2.8 }}
+                    className={styles.calendarLink}
                   >
-                    <Box
-                      sx={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: 1,
-                      }}
-                    >
-                      <GoogleBadge />
-                      <span>Add to Google Calendar</span>
-                    </Box>
-                  </Button>
-                </Box>
-                <Box sx={{ minWidth: "min(360px, 100%)" }}>
-                  <Button
-                    className={styles.btnGhost}
-                    component="a"
-                    href={icsUrl}
-                    disableElevation
-                    sx={{ px: 2.8 }}
-                  >
-                    <Box
-                      sx={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: 1,
-                      }}
-                    >
-                      <CalendarFileBadge />
-                      <span>Add to Apple / Outlook</span>
-                    </Box>
-                  </Button>
-                  <Typography
-                    sx={{
-                      mt: 0.8,
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "11px",
-                      letterSpacing: "0.01em",
-                      lineHeight: 1.35,
-                      maxWidth: "47ch",
-                    }}
-                  >
-                    Downloads a calendar file (.ics) you can open in Apple
-                    Calendar, Outlook, Yahoo, and similar calendar apps.
-                  </Typography>
+                    <GoogleBadge size={12} />
+                    Google
+                  </a>
+                  <span className={styles.calendarSep}>·</span>
+                  <a href={icsUrl} className={styles.calendarLink}>
+                    <CalendarFileBadge size={12} />
+                    Apple/Outlook
+                  </a>
                 </Box>
               </Box>
             </Box>
@@ -432,7 +457,7 @@ export function InviteClient({
                   className={styles.scribble}
                   style={{ fontStyle: "italic" }}
                 >
-                  Incase you have forgotten what we look like...
+                  In case you have forgotten what we look like...
                 </span>
                 .
               </Typography>
@@ -485,6 +510,13 @@ export function InviteClient({
                   <Typography className={styles.tapHint}>
                     Top tip: click a photo.
                   </Typography>
+                  <button
+                    type="button"
+                    className={styles.mosaicTrigger}
+                    onClick={() => setMosaicOpen(true)}
+                  >
+                    View all photos ⤢
+                  </button>
                 </>
               ) : (
                 <Typography
@@ -500,7 +532,73 @@ export function InviteClient({
             </Box>
           </Box>
 
-          <Box className={styles.formCard}>
+          <Modal
+            open={mosaicOpen}
+            onClose={() => {
+              setMosaicOpen(false);
+              setLightboxUrl(null);
+            }}
+            disablePortal
+          >
+            <Box className={styles.mosaicRoot}>
+              <Box className={styles.mosaicBackdrop} />
+              <Box className={styles.mosaicOverlay}>
+                <button
+                  type="button"
+                  className={styles.mosaicClose}
+                  aria-label="Close photo wall"
+                  onClick={() => {
+                    setMosaicOpen(false);
+                    setLightboxUrl(null);
+                  }}
+                >
+                  ✕
+                </button>
+                <Box className={styles.mosaicGrid}>
+                  {visiblePhotoUrls.map((url, idx) => (
+                    <Box
+                      key={url}
+                      className={styles.mosaicItem}
+                      onClick={() => setLightboxUrl(url)}
+                    >
+                      <Box
+                        component="img"
+                        src={url}
+                        alt={`Memory ${idx + 1} for ${guest.display_name}`}
+                        className={styles.mosaicImg}
+                      />
+                    </Box>
+                  ))}
+                </Box>
+                <Typography className={styles.mosaicFootnote} sx={{ mt: 1 }}>
+                  This page exists due to numerous complaints concerning the
+                  ease of navigation of the photos. Feedback is{" "}
+                  <span style={{ textDecoration: "underline" }}>not</span>{" "}
+                  welcome.
+                </Typography>
+              </Box>
+              {lightboxUrl ? (
+                <Box
+                  className={styles.lightbox}
+                  onClick={() => setLightboxUrl(null)}
+                >
+                  <Box className={styles.lightboxContent}>
+                    <Box
+                      component="img"
+                      src={lightboxUrl}
+                      alt={`Memory for ${guest.display_name}, enlarged`}
+                      className={styles.lightboxImg}
+                    />
+                    <Typography className={styles.lightboxCaption}>
+                      {getPhotoCaptionFromUrl(lightboxUrl)}
+                    </Typography>
+                  </Box>
+                </Box>
+              ) : null}
+            </Box>
+          </Modal>
+
+          <Box id="rsvp-form" className={styles.formCard}>
             {mode === "save_the_date" ? (
               <Box component="form" onSubmit={handleContactSubmit}>
                 <Typography className={styles.formTitle}>
@@ -558,7 +656,7 @@ export function InviteClient({
             ) : (
               <Box component="form" onSubmit={handleRsvpSubmit}>
                 <Typography className={styles.formTitle}>RSVP</Typography>
-                <Typography className={styles.formIntro}>
+                <Typography className={styles.formIntro} sx={{ mb: 2 }}>
                   Let us know if you&apos;re coming. You can update this any
                   time with the same link.
                 </Typography>
@@ -575,35 +673,71 @@ export function InviteClient({
                     <MenuItem value="yes">Yes</MenuItem>
                     <MenuItem value="no">No</MenuItem>
                   </TextField>
-                  <TextField
-                    select
-                    label="Number attending"
-                    sx={inviteFieldSx}
-                    value={attending === "yes" ? attendingCount : 0}
-                    disabled={attending === "no"}
-                    helperText={`Your party size limit is ${guest.max_party_size}.`}
-                    onChange={(e) => setAttendingCount(Number(e.target.value))}
-                  >
-                    {countChoices.map((count) => (
-                      <MenuItem key={count} value={count}>
-                        {count}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                  <TextField
-                    label="Dietary requirements"
-                    multiline
-                    minRows={2}
-                    sx={inviteFieldSx}
-                    value={dietaryNotes}
-                    onChange={(e) => setDietaryNotes(e.target.value)}
-                  />
-                  <TextField
-                    label="Song request"
-                    sx={inviteFieldSx}
-                    value={songRequest}
-                    onChange={(e) => setSongRequest(e.target.value)}
-                  />
+                  {attending === "yes" ? (
+                    <TextField
+                      select
+                      label="Number attending"
+                      sx={inviteFieldSx}
+                      value={attendingCount}
+                      helperText={`Your invitation allows up to ${guest.max_party_size} guests.`}
+                      onChange={(e) =>
+                        setAttendingCount(Number(e.target.value))
+                      }
+                    >
+                      {countChoices.map((count) => (
+                        <MenuItem key={count} value={count}>
+                          {count}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  ) : null}
+                  {attending === "yes" ? (
+                    <TextField
+                      label="Dietary requirements"
+                      multiline
+                      minRows={2}
+                      sx={inviteFieldSx}
+                      value={dietaryNotes}
+                      onChange={(e) => setDietaryNotes(e.target.value)}
+                    />
+                  ) : null}
+                  {attending === "yes" ? (
+                    <Box>
+                      <Typography
+                        sx={{
+                          fontFamily: "var(--font-mono)",
+                          fontSize: "12px",
+                          letterSpacing: "0.12em",
+                          textTransform: "uppercase",
+                        }}
+                      >
+                        How boozy are you feeling? {boozyLevel}/10
+                      </Typography>
+                      <Slider
+                        value={boozyLevel}
+                        min={0}
+                        max={10}
+                        step={1}
+                        marks
+                        onChange={(_e, value) =>
+                          setBoozyLevel(value as number)
+                        }
+                        sx={{ mt: 1, color: "var(--ink)" }}
+                      />
+                      {boozyLevel === 0 ? (
+                        <Typography
+                          sx={{
+                            fontFamily: "var(--font-mono)",
+                            fontSize: "11px",
+                            color: "var(--accent, #e2421f)",
+                            mt: -0.5,
+                          }}
+                        >
+                          Oh come on... at least 1 surely.
+                        </Typography>
+                      ) : null}
+                    </Box>
+                  ) : null}
                   <TextField
                     label="Message to hosts"
                     multiline

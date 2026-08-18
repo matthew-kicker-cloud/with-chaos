@@ -16,6 +16,7 @@ export type Guest = {
   dietary_notes: string | null;
   song_request: string | null;
   message: string | null;
+  boozy_level: number;
   save_the_date_seen_at: string | null;
   declined_at_save_the_date: boolean;
   contact_details_updated_at: string | null;
@@ -29,7 +30,15 @@ export type EventConfig = {
   date: string;
   roughLocation: string;
   fullLocation: string;
+  mapsUrl: string;
   details: string;
+  dressCode: string;
+  startTime: string;
+  endTime: string;
+  startTime24: string;
+  endTime24: string;
+  timeZone: string;
+  rsvpDeadline: string;
 };
 
 export type RsvpPayload = {
@@ -37,7 +46,7 @@ export type RsvpPayload = {
   attending: "yes" | "no";
   attendingCount: number;
   dietaryNotes: string;
-  songRequest: string;
+  boozyLevel: number;
   message: string;
 };
 
