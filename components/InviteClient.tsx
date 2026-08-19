@@ -431,6 +431,12 @@ export function InviteClient({
                     </Typography>
                   </>
                 ) : null}
+                <Typography variant="inviteDetailsBody" sx={{ mt: 2 }}>
+                  Questions? Email:{" "}
+                  <a href="mailto:amyandmatthew2026@gmail.com">
+                    amyandmatthew2026@gmail.com
+                  </a>
+                </Typography>
                 <Box className={styles.calendarRow}>
                   <span>Add to calendar:</span>
                   <a

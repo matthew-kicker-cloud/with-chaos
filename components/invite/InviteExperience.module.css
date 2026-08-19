@@ -34,12 +34,15 @@
     opacity: 0;
     transform: translateY(-50%);
   }
+
   12% {
     opacity: 0.85;
   }
+
   88% {
     opacity: 0.85;
   }
+
   100% {
     left: 108%;
     opacity: 0;
@@ -59,12 +62,15 @@
     0% {
       opacity: 0;
     }
+
     35% {
       opacity: 0.85;
     }
+
     65% {
       opacity: 0.85;
     }
+
     100% {
       opacity: 0;
     }
@@ -90,12 +96,10 @@
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: radial-gradient(
-    1200px 600px at 50% -10%,
-    rgba(42, 34, 26, 0.2) 0%,
-    rgba(20, 17, 13, 0.28) 60%,
-    rgba(10, 9, 7, 0.34) 100%
-  );
+  background: radial-gradient(1200px 600px at 50% -10%,
+      rgba(42, 34, 26, 0.2) 0%,
+      rgba(20, 17, 13, 0.28) 60%,
+      rgba(10, 9, 7, 0.34) 100%);
   display: none;
 }
 
@@ -216,7 +220,7 @@
 
 .detailsCard {
   margin-top: 14px;
-  padding: 18px 20px;
+  padding: 8px 8px;
 }
 
 .metaRow {
@@ -709,4 +713,3 @@
     margin-top: 6px;
   }
 }
-
