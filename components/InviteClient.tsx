@@ -373,7 +373,7 @@ export function InviteClient({
                 <Typography variant="inviteIntro" sx={{ mt: 2 }}>
                   {mode === "save_the_date"
                     ? "This is your (updated) save-the-date. More details will keep coming chaotically through."
-                    : `Please RSVP by ${eventRsvpDeadline}.`}
+                    : ``}
                 </Typography>
               </Box>
 
